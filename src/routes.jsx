@@ -14,8 +14,11 @@ import { ContactEdit } from "./pages/ContactEdit";
 import { Error } from "./pages/Error";
 
 
-
 export const router = createBrowserRouter(
+
+  
+
+
   createRoutesFromElements(
     // CreateRoutesFromElements function allows you to build route elements declaratively.
     // Create your routes here, if you want to keep the Navbar and Footer in all views, add your new routes inside the containing Route.
@@ -27,7 +30,7 @@ export const router = createBrowserRouter(
     <Route path="/" element={<Layout />} errorElement={<Error/>}>
       {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
       <Route path="/" element={<Home />} />
-      <Route path="/single/:theId" element={<Single />} />{" "}
+      <Route path="/single/" element={<Single />} />{" "}
       {/* Dynamic route for single items */}
       <Route path="/demo" element={<Demo />} />
       <Route path="/add-contact" element={<AddContact />} />\

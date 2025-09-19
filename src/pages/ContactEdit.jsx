@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { usuario, setUsuario } from "./Error";
 
 
 export const ContactEdit = () => {
@@ -20,7 +19,7 @@ export const ContactEdit = () => {
 
 
   const llamadaContactos = () => {
-    fetch(`https://playground.4geeks.com/contact/agendas/${usuario}/`, {
+    fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio`, {
       method: "GET",
     })
       .then((response) => {
@@ -111,12 +110,12 @@ export const ContactEdit = () => {
           onClick={() => {
             navigate("/");
           }}
-          className="btn btn-warning"
+          className="btn btn-secondary"
         >
           Me he arrepentido, llevame a mis contactos..
         </button>
 
-        <button onClick={()=>{return console.log(email);}} >magia</button>
+        {/* <button onClick={()=>{return console.log(email);}} >magia</button> */}
       </div>
     </div>
   );

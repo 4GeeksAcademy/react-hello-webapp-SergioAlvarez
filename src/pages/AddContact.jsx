@@ -1,6 +1,6 @@
 import { useReducer, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import { usuario, setUsuario } from "./Error";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+
 export const AddContact = () => {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
@@ -8,6 +8,7 @@ export const AddContact = () => {
   const [direccion, setDireccion] = useState("");
 
   const navigate = useNavigate();
+  const {idUsuarioCreado} = useParams()
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +24,7 @@ export const AddContact = () => {
     };
 
     fetch(
-      `https://playground.4geeks.com/contact/agendas/${usuario}/contacts`,
+      `https://playground.4geeks.com/contact/agendas/agendaSergio/contacts`,
       {
         method: "POST",
         headers: {

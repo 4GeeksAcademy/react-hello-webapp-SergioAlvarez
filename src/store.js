@@ -32,7 +32,13 @@ export default function storeReducer(store, action = {}) {
       case "almacenarDatos":
         return {
           ...store,
-          constactList: action.payload
+          contactList: action.payload
+          
+        }
+
+        case "cambiarDatosStore":
+        return {
+          ...store,
           
         }
     default:

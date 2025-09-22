@@ -38,7 +38,7 @@ export const AddContact = () => {
         return null;
       })
       .then((data) => {
-         alert("Has Agregado a un contacto con exito!");
+         alert("Has agregado a un contacto con exito!");
          return navigate("/")
       })
       .catch((err) => {

@@ -1,55 +1,108 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-
+import useGlobalReducer from "../hooks/useGlobalReducer";
+import { createLogger } from "vite";
 
 export const ContactEdit = () => {
+  const { idContact } = useParams();
+  const navigate = useNavigate();
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
 
-    const { idContact } = useParams();
-    const navigate = useNavigate();
-    const [nombre, setNombre] = useState("")
-    const [email, setEmail] = useState("")
-    const [telefono, setTelefono] = useState("")
-    const [direccion, setDireccion] = useState("")
-
+  const { store, dispatch } = useGlobalReducer();
 
   useEffect(() => {
-    llamadaContactos()
-    
-}, [])
+    recuperarInfo()
+  }, [])
+  
+  const recuperarInfo = ()=>{
+    return store.contactList.map((i)=>{
+      console.log(i)
+      
+      if(i.id == idContact){
+        
+        setNombre(i.name)
+        setEmail(i.email)
+        setTelefono(i.phone)
+        setDireccion(i.address)
 
-
-  const llamadaContactos = () => {
-    fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio`, {
-      method: "GET",
+      }
     })
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
-      .then((data) => {
-        let info = data.contacts
-        info.map((i)=>{console.log(i)
-            if(i.id == idContact){
-                setNombre(i.name)
-                setEmail(i.email)
-                setTelefono(i.phone)
-               return setDireccion(i.address)
+  }
 
-            }
-        })
-       
-        return console.log(data);
-      })
-      .catch();
-  };
+  const cambiarDatosStore = ()=>{
+    let data = {
+      name: nombre,
+      phone: telefono,
+      email: email,
+      address: direccion,
+    }
+     return fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio/contacts/${idContact}`,{
+      method: "PUT",
+      headers: 'Content-Type: application/json',
+      body: JSON.stringify(data)
 
+    })
+    .then((response)=>{
+     return console.log(response) || []
+    })
+    .then((data)=>{
+     return console.log(data) || []
+    })
+    .catch((err)=>{console.log(err)})
+    
+    
+  }
+    // dispatch({
+    //   type: 'cambiarDatosStore',
+    //   payload: [...store.contactList,
+    //     ...data
+    //   ]
+    // })
+
+  const recogerNombre = (e) =>{
+    console.log(e.target.value)
+   return setNombre(e.target.value)
+  }
+  const recogerEmail = (e) =>{
+   return setEmail(e.target.value)
+  }
+  const recogerTelefono = (e) =>{
+   return setTelefono(e.target.value)
+  }
+
+  const recogerDireccion = (e) =>{
+   return setDireccion(e.target.value)
+  }
+
+  const editarContacto = () =>{
+    cambiarDatosStore()
+    navigate("/")
+  }
 
   return (
-    <div  className="container ">
+
+    <div className="container ">
+      <button
+        onClick={() => {
+          return cambiarDatosStore()
+        }}
+      >
+        magia
+      </button>
+      <button
+        onClick={() => {
+          return console.log(recogerNombre())
+        }}
+      >
+        MasMagia
+      </button>
       <div>
         Aqui editaremos el contacto
-        <p>contacto: {idContact}</p>
-        <form >
+        <p>contacto: {}</p>
+        <form onSubmit={editarContacto}>
           <label htmlFor="nombreUsuario" className="form-label">
             Nombre Completo
           </label>
@@ -57,9 +110,9 @@ export const ContactEdit = () => {
             type="text"
             id="nombreUsuario"
             className="form-control"
-            placeholder={nombre}
-           
-            
+          
+            onChange={recogerNombre}
+            value={nombre}
           ></input>
           <br></br>
           <label htmlFor="email" className="form-label">
@@ -69,8 +122,8 @@ export const ContactEdit = () => {
             type="email"
             id="email"
             className="form-control"
-            placeholder={email}
-
+            onChange={recogerEmail}
+            value={email}
           />
           <br />
           <label htmlFor="numeroTelefono" className="form-label">
@@ -80,9 +133,9 @@ export const ContactEdit = () => {
             type="text"
             maxLength="9"
             id="numeroTelefono"
-            placeholder={telefono}
+            value={telefono}
             className="form-control"
-
+            onChange={recogerTelefono}
           />
           <br />
           <label htmlFor="direccion" className="form-label">
@@ -91,14 +144,15 @@ export const ContactEdit = () => {
           <input
             type="text"
             id="direccion"
-            placeholder={direccion}
+            value={direccion}
             className="form-control"
-
+            onChange={recogerDireccion}
           />
           <br />
           <button
             type="submit"
             className="btn btn-success container text-center m-2"
+            
           >
             Editar Contacto
           </button>
@@ -114,9 +168,14 @@ export const ContactEdit = () => {
         >
           Me he arrepentido, llevame a mis contactos..
         </button>
-
-        {/* <button onClick={()=>{return console.log(email);}} >magia</button> */}
       </div>
+      <button
+        onClick={() => {
+          return console.log(store);
+        }}
+      >
+        magia
+      </button>
     </div>
   );
 };

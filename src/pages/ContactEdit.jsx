@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import { createLogger } from "vite";
+
 
 export const ContactEdit = () => {
   const { idContact } = useParams();
@@ -32,35 +32,37 @@ export const ContactEdit = () => {
     })
   }
 
+
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    cambiarDatosStore()
+  }
+
   const cambiarDatosStore = ()=>{
+
     let data = {
       name: nombre,
       phone: telefono,
       email: email,
       address: direccion,
     }
-     return fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio/contacts/${idContact}`,{
+     fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio/contacts/${idContact}`,{
       method: "PUT",
-      headers: 'Content-Type: application/json',
-      body: JSON.stringify(data)
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
 
     })
     .then((response)=>{
-     return console.log(response) || []
+     return console.log(response.status) || []
     })
     .then((data)=>{
-     return console.log(data) || []
+     return navigate("/") || []
     })
     .catch((err)=>{console.log(err)})
-    
-    
   }
-    // dispatch({
-    //   type: 'cambiarDatosStore',
-    //   payload: [...store.contactList,
-    //     ...data
-    //   ]
-    // })
+
 
   const recogerNombre = (e) =>{
     console.log(e.target.value)
@@ -77,14 +79,16 @@ export const ContactEdit = () => {
    return setDireccion(e.target.value)
   }
 
-  const editarContacto = () =>{
-    cambiarDatosStore()
-    navigate("/")
-  }
+  // const editarContacto = () =>{
+  //   cambiarDatosStore().then(()=>{
+  //     return navigate("/")
+  //   })
+
+  // }
 
   return (
 
-    <div className="container ">
+    <div className="container  ">
       <button
         onClick={() => {
           return cambiarDatosStore()
@@ -100,9 +104,7 @@ export const ContactEdit = () => {
         MasMagia
       </button>
       <div>
-        Aqui editaremos el contacto
-        <p>contacto: {}</p>
-        <form onSubmit={editarContacto}>
+        <form onSubmit={handleSubmit}>
           <label htmlFor="nombreUsuario" className="form-label">
             Nombre Completo
           </label>
@@ -130,7 +132,7 @@ export const ContactEdit = () => {
             Numero de Telefono
           </label>
           <input
-            type="text"
+            type="tel"
             maxLength="9"
             id="numeroTelefono"
             value={telefono}
@@ -152,6 +154,7 @@ export const ContactEdit = () => {
           <button
             type="submit"
             className="btn btn-success container text-center m-2"
+            onClick={handleSubmit}
             
           >
             Editar Contacto

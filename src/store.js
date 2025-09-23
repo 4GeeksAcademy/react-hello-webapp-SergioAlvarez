@@ -1,20 +1,9 @@
 export const initialStore=()=>{
   return{
     message: null,
-    todos: [
-      {
-        id: 1,
-        title: "Make the bed",
-        background: null,
-      },
-      {
-        id: 2,
-        title: "Do my homework",
-        background: null,
-      }
-    ],
     saludo: "hola",
-    contactList: []
+    contactList: [],
+    ejemplo: []
   }
 }
 
@@ -36,11 +25,17 @@ export default function storeReducer(store, action = {}) {
           
         }
 
-        case "cambiarDatosStore":
+        case 'actualizar':
+          const {indexConcreto} = action.payload
         return {
           ...store,
-          
+          contactList: store.contactList.filter((_,i)=>i !== indexConcreto )
         }
+
+        case 'cambiarStore':
+          return {...store,
+            ejemplo: action.payload
+          }
     default:
       throw Error('Unknown action.');
   }    

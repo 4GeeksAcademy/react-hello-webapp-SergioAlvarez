@@ -12,98 +12,132 @@ export const Home = () => {
   // store seria hola, funciona como una variable que tiene un array de objetos, donde podemos acceder a ella para retornar cualquier info que guardemos.
   // dispatch seria setHola, aqui, a traves de "case" que definimos en nuestro archivo store, podriamos decidir que guardamos en hola, por medio de funciones.
 
-  useEffect(() => {
-    const llamadaContactos = () => {
-      return fetch(
-        `https://playground.4geeks.com/contact/agendas/agendaSergio`,
-        {
-          method: "GET",
-        }
-      )
-        .then((response) => {
-          console.log(response);
-          if (!response.ok) {
-            return []
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data.contacts);
-          return data.contacts || [];
-        })
-        .catch((err) => {
-          console.log(err);
+  const llamadaContactos = () => {
+    return fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio`, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log(response);
+        if (!response.ok) {
           return [];
-        });
-    };
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.contacts);
+        return data.contacts || [];
+      })
+      .catch((err) => {
+        console.log(err);
+        return [];
+      });
+  };
+  useEffect(() => {
     llamadaContactos().then((response) => {
       console.log(response);
       dispatch({
         type: "almacenarDatos",
-        payload: [...store.contactList, ...response],
+        payload: response,
       });
-      console.log(store.contactList);
+      console.log(response);
     });
   }, []);
 
-  // const manejarDatos = ()=>{
-  //   llamadaContactos()
-  // }
-
-  const eliminarContacto = (id) => {
-    fetch(
+  const eliminarContacto = (id, i) => {
+    return fetch(
       `https://playground.4geeks.com/contact/agendas/agendaSergio/contacts/${id}`,
       {
         method: "DELETE",
       }
     )
       .then((response) => {
-        console.log(response);
-        return null;
+        return console.log(id) || [];
       })
       .then((data) => {
-        navigate("/");
-        return llamadaContactos();
+        return (
+          dispatch({ type: "actualizar", payload: { indexConcreto: i } }) || []
+        );
       })
+
       .catch((err) => {
         console.log(err);
       });
   };
+
   return (
-    <div className="container m-5">
+    <div className="d-flex text-center justify-content-center align-items-center flex-column m-5">
       <h1>Contact List</h1>
       <h2></h2>
-      <div className="container m-2">
-        <button
-          onClick={() => {
-            return console.log(store.contactList);
-          }}
-        >
-          magia
-        </button>
-        <ul>
-          {store.contactList.map((i) => {
-            return (
-              <div key={i.id} className="container card m-2">
-                <p>{i.name}</p>
-                <p>{i.address}</p>
-                <p>{i.phone}</p>
-                <p>{i.email}</p>
-                <div>
+
+      {store.contactList.map((i, index) => {
+        return (
+          <div key={i.id} className="container card m-2 p-2">
+            <div className="row flex-column flex-md-row g-3">
+              <div className="col-12 col-md-4 d-flex align-items-center justify-content-center">
+                <img
+                  src="https://avatar.iran.liara.run/public/boy"
+                  alt="example-profile-picture"
+                  height="100px"
+                />
+              </div>
+
+              <div className="col-12 col-md-4 d-flex text-center flex-column">
+                <h5>
+                  <strong>{i.name}</strong>
+                </h5>
+                <p>
+                  <i class="fa-solid fa-location-dot me-1"></i>
+                  {i.address}
+                </p>
+
+                <p>
+                  <i class="fa-solid fa-phone me-1"></i>
+                  {i.phone}
+                </p>
+                <p>
+                  <i class="fa-solid fa-envelope me-1"></i>
+                  {i.email}
+                </p>
+              </div>
+              <div className="col-12 col-md-4 d-flex align-items-center justify-content-center">
+                <button
+                  className="btn btn-warning m-2"
+                  onClick={() => {
+                    navigate(`/contact-edit/${i.id}`);
+                  }}
+                >
+                  <i className="fa-solid fa-pencil m-1"></i>
+                </button>
+
+                <div class="dropdown">
                   <button
-                    className="btn btn-warning"
-                    onClick={() => {
-                      navigate(`/contact-edit/${i.id}`);
-                    }}
+                    class="btn btn-danger dropdown-toggle m-2 p-2"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa-solid fa-pencil"></i>
+                    <i class="fa-solid fa-trash-can"></i>
                   </button>
+                  <ul class="dropdown-menu">
+                    <div className="d-flex justify-content-center align-items-center">
+
+                    <button
+                      className="btn btn-danger d-flex "
+                      onClick={() => {
+                        return eliminarContacto(i.id, index);
+                      }}
+                      >
+                      Estoy seguro.
+                    </button>
+                      </div>
+                  </ul>
                 </div>
               </div>
-            );
-          })}
-        </ul>
-      </div>
+            </div>
+          </div>
+        );
+      })}
+
       <div className="container text-center m-2">
         <button
           className="btn btn-success container"

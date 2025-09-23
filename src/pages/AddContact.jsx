@@ -61,7 +61,7 @@ export const AddContact = () => {
   console.log("hola desde addcontact");
   return (
     <>
-      <div className="container card m-2">
+      <div className="container  text-center justify-content-center align-items-center flex-column m-5">
         <form onSubmit={handleSubmit}>
           <label htmlFor="nombreUsuario" className="form-label">
             Nombre Completo
@@ -117,21 +117,13 @@ export const AddContact = () => {
           </button>
         </form>
       </div>
-      <div className="container text-center m-2">
+      <div className="text-center">
         <Link to="/">
           <button className="btn btn-warning">
             Me he arrepentido, llevame a mis contactos..
           </button>
         </Link>
       </div>
-
-      <button
-        onClick={() => {
-          console.log(nombre);
-        }}
-      >
-        Magia
-      </button>
     </>
   );
 };

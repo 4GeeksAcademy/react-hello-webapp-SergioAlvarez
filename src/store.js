@@ -3,7 +3,7 @@ export const initialStore=()=>{
     message: null,
     saludo: "hola",
     contactList: [],
-    ejemplo: []
+    usuario: ''
   }
 }
 
@@ -36,6 +36,12 @@ export default function storeReducer(store, action = {}) {
           return {...store,
             ejemplo: action.payload
           }
+
+          case 'crearContacto':
+            return {
+              ...store,
+              usuario: action.payload
+            }
     default:
       throw Error('Unknown action.');
   }    

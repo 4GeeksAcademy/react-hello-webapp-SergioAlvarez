@@ -7,10 +7,6 @@ export const Home = () => {
   const navigate = useNavigate();
   const { idUsuarioCreado } = useParams();
 
-  // store y dispatch son como un useState
-  // en un useState tendriamos => const [hola, setHola] = useState
-  // store seria hola, funciona como una variable que tiene un array de objetos, donde podemos acceder a ella para retornar cualquier info que guardemos.
-  // dispatch seria setHola, aqui, a traves de "case" que definimos en nuestro archivo store, podriamos decidir que guardamos en hola, por medio de funciones.
 
   const llamadaContactos = () => {
     return fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio`, {
@@ -64,6 +60,41 @@ export const Home = () => {
       });
   };
 
+  async function crearAgenda (){
+
+    
+    try {
+      const response = await fetch(`https://playground.4geeks.com/contact/agendas/agendaSergio`,{
+        method: 'POST',
+      })
+      if(response.ok == false){
+        throw new Error("La response.ok dio false")
+      }
+      const data = await response.json()
+      console.log(data.slug);
+          dispatch({type: "crearContacto", payload: data.slug})
+  
+} catch (err) {
+  console.log(err);
+}
+
+}
+
+  async function eliminarAgenda() {
+    try {
+      const response = await fetch("https://playground.4geeks.com/contact/agendas/agendaSergio",{
+        method: 'DELETE',
+      })
+      if(response.ok == false){
+        throw new Error("La respuesta fue false")
+      }
+      const data = await response.json()
+      console.log(data);
+    } catch (err){
+      console.log(err);
+    }
+  }
+
   return (
     <div className="d-flex text-center justify-content-center align-items-center flex-column m-5">
       <h1>Contact List</h1>
@@ -86,16 +117,16 @@ export const Home = () => {
                   <strong>{i.name}</strong>
                 </h5>
                 <p>
-                  <i class="fa-solid fa-location-dot me-1"></i>
+                  <i className="fa-solid fa-location-dot me-1"></i>
                   {i.address}
                 </p>
 
                 <p>
-                  <i class="fa-solid fa-phone me-1"></i>
+                  <i className="fa-solid fa-phone me-1"></i>
                   {i.phone}
                 </p>
                 <p>
-                  <i class="fa-solid fa-envelope me-1"></i>
+                  <i className="fa-solid fa-envelope me-1"></i>
                   {i.email}
                 </p>
               </div>
@@ -109,16 +140,16 @@ export const Home = () => {
                   <i className="fa-solid fa-pencil m-1"></i>
                 </button>
 
-                <div class="dropdown">
+                <div className="dropdown">
                   <button
-                    class="btn btn-danger dropdown-toggle m-2 p-2"
+                    className="btn btn-danger dropdown-toggle m-2 p-2"
                     type="button"
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
                   >
-                    <i class="fa-solid fa-trash-can"></i>
+                    <i className="fa-solid fa-trash-can"></i>
                   </button>
-                  <ul class="dropdown-menu">
+                  <ul className="dropdown-menu">
                     <div className="d-flex justify-content-center align-items-center">
 
                     <button
@@ -147,6 +178,14 @@ export const Home = () => {
         >
           Agregar Nuevo contacto
         </button>
+
+        <button className="btn btn-primary container mt-1"
+        onClick={()=>{return crearAgenda()}}
+        >Crear nueva agenda</button>
+
+        <button
+        className="btn btn-danger container mt-1"
+        onClick={()=>{return eliminarAgenda()}}>Borrar Agenda</button>
       </div>
     </div>
   );
